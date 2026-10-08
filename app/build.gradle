@@ -1,5 +1,38 @@
 plugins { id 'com.android.application' }
 
-android { namespace 'com.aquasuper.smsgateway'; compileSdk 35
-    defaultConfig { applicationId 'com.aquasuper.smsgateway'; minSdk 26; targetSdk 35; versionCode 1; versionName '1.0' }
+android {
+    namespace 'com.aquasuper.smsgateway'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.aquasuper.smsgateway'
+        minSdk 26
+        targetSdk 35
+        versionCode 2
+        versionName '1.1'
+    }
+
+    signingConfigs {
+        release {
+            def ks = System.getenv("AQUA_KEYSTORE")
+            def kp = System.getenv("AQUA_KEYSTORE_PASSWORD")
+            def ka = System.getenv("AQUA_KEY_ALIAS")
+            def kpass = System.getenv("AQUA_KEY_PASSWORD")
+            if (ks && kp && ka && kpass) {
+                storeFile file(ks)
+                storePassword kp
+                keyAlias ka
+                keyPassword kpass
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (System.getenv("AQUA_KEYSTORE")) {
+                signingConfig signingConfigs.release
+            }
+            minifyEnabled false
+        }
+    }
 }
